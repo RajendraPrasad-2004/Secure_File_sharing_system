@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Share file{% endblock %}
+{% block content %}
+<h1>Share {{ file['original_filename'] }}</h1>
+<div class="two-col">
+  <section class="panel">
+    <form method="post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="username">Username of the person to share with</label>
+      <input id="username" name="username" type="text" maxlength="30" required autofocus>
+      <p class="hint">Their copy of the file key is encrypted with their own public key. The file is not re-encrypted.</p>
+      <button type="submit" class="btn primary">Share file</button>
+      <a href="{{ url_for('files') }}" class="btn ghost">Back to my files</a>
+    </form>
+  </section>
+  <section class="panel">
+    <h2>People with access</h2>
+    {% if recipients %}
+    <ul class="events">
+      {% for r in recipients %}
+      <li class="between">
+        <span><strong>{{ r['username'] }}</strong><br><small class="muted">since {{ r['created_at'] }} UTC</small></span>
+        <form method="post" action="{{ url_for('unshare', share_id=r['share_id']) }}" data-confirm="Remove access for {{ r['username'] }}?">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="next_file" value="{{ file['id'] }}">
+          <button class="btn small danger" type="submit">Remove</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Only you can open this file.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

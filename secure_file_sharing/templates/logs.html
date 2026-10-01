@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Security logs{% endblock %}
+{% block content %}
+<h1>Security logs</h1>
+<p class="muted">Your 100 most recent security events.</p>
+<section class="panel">
+{% if logs %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Time (UTC)</th><th>Action</th><th>IP address</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for l in logs %}
+  <tr>
+    <td>{{ l['timestamp'] }}</td>
+    <td>{{ l['action'] }}</td>
+    <td class="mono">{{ l['ip_address'] }}</td>
+    <td><span class="badge {{ l['status']|lower }}">{{ l['status'] }}</span></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="empty">No events yet.</p>
+{% endif %}
+</section>
+{% endblock %}

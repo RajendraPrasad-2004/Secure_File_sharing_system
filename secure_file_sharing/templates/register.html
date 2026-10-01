@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Create account{% endblock %}
+{% block auth_content %}
+<h1>Create your account</h1>
+<p class="muted">A personal RSA key pair is generated for you at sign-up.</p>
+<form method="post" novalidate id="register-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label for="username">Username</label>
+  <input id="username" name="username" type="text" minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" autocomplete="username" required autofocus>
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" autocomplete="email" required>
+  <label for="password">Password</label>
+  <div class="pw-row">
+    <input id="password" name="password" type="password" minlength="8" autocomplete="new-password" required data-strength="strength-bar">
+    <button type="button" class="btn ghost small" data-toggle-password="password">Show</button>
+  </div>
+  <div class="strength"><div id="strength-bar"></div></div>
+  <p class="hint" id="strength-text">At least 8 characters with a letter and a number.</p>
+  <label for="confirm_password">Confirm password</label>
+  <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" required>
+  <p class="hint error-text" id="match-text" hidden>Passwords do not match.</p>
+  <button type="submit" class="btn primary block">Create account</button>
+</form>
+<p class="muted">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+{% endblock %}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Welcome{% endblock %} - VaultShare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% if current_user %}
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('dashboard') }}">VaultShare</a>
+    <nav>
+      <a href="{{ url_for('dashboard') }}" class="{{ 'on' if request.endpoint == 'dashboard' }}">Dashboard</a>
+      <a href="{{ url_for('upload') }}" class="{{ 'on' if request.endpoint == 'upload' }}">Upload file</a>
+      <a href="{{ url_for('files') }}" class="{{ 'on' if request.endpoint in ('files', 'share') }}">My files</a>
+      <a href="{{ url_for('shared_files') }}" class="{{ 'on' if request.endpoint == 'shared_files' }}">Shared with me</a>
+      <a href="{{ url_for('logs') }}" class="{{ 'on' if request.endpoint == 'logs' }}">Security logs</a>
+    </nav>
+    <form method="post" action="{{ url_for('logout') }}" class="logout">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <span class="who">{{ current_user['username'] }}</span>
+      <button type="submit" class="btn ghost">Log out</button>
+    </form>
+  </aside>
+  <main class="content">
+    {% include '_flash.html' %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% else %}
+<main class="auth">
+  {% block auth %}
+  <div class="auth-card">
+    {% include '_flash.html' %}
+    {% block auth_content %}{% endblock %}
+  </div>
+  {% endblock %}
+</main>
+{% endif %}
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

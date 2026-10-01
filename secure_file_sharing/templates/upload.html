@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Upload file{% endblock %}
+{% block content %}
+<h1>Upload a file</h1>
+<div class="two-col">
+  <section class="panel">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="file">Choose a file</label>
+      <input id="file" name="file" type="file" required data-max-bytes="{{ max_bytes }}">
+      <p class="hint" id="file-info">Maximum size {{ max_mb }} MB.</p>
+      <p class="hint">Allowed types: {{ extensions|join(', ') }}</p>
+      <button type="submit" class="btn primary">Encrypt and upload</button>
+    </form>
+  </section>
+  <section class="panel">
+    <h2>What happens next</h2>
+    <ol class="steps">
+      <li>The server checks the file name, type and size.</li>
+      <li>A new random 256-bit AES key is created for this file.</li>
+      <li>The file is encrypted with AES-256-GCM, which also adds an integrity tag.</li>
+      <li>The AES key is encrypted with your RSA public key (OAEP, SHA-256).</li>
+      <li>Only the ciphertext and the protected key are stored. The original is never saved.</li>
+    </ol>
+  </section>
+</div>
+{% endblock %}

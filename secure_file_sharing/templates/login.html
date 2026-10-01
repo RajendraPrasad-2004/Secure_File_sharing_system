@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Log in{% endblock %}
+{% block auth %}
+<div class="auth-split">
+  <section class="auth-form">
+    <h1>Log in to VaultShare</h1>
+    <p class="muted">Files are encrypted before they reach the disk.</p>
+    {% include '_flash.html' %}
+    <form method="post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="identifier">Username or email</label>
+      <input id="identifier" name="identifier" type="text" autocomplete="username" required autofocus>
+      <label for="password">Password</label>
+      <div class="pw-row">
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button type="button" class="btn ghost small" data-toggle-password="password">Show</button>
+      </div>
+      <button type="submit" class="btn primary block">Log in</button>
+    </form>
+    <p class="muted">No account? <a href="{{ url_for('register') }}">Create one</a></p>
+  </section>
+  <section class="auth-aside" aria-label="How your files are protected">
+    <h2>What happens to your file</h2>
+    <div class="flow">
+      <div class="flow-row"><span class="chip plain">report.pdf</span><span class="arrow">encrypted with</span><span class="chip aes">AES-256-GCM</span><span class="arrow">gives</span><span class="chip cipher">ciphertext + tag</span></div>
+      <div class="flow-row"><span class="chip aes">random AES key</span><span class="arrow">wrapped with</span><span class="chip rsa">RSA-2048 OAEP</span><span class="arrow">gives</span><span class="chip cipher">protected key</span></div>
+    </div>
+    <p class="muted">The server stores only the ciphertext and the protected key. Your private key is unlocked by your password at login and never saved in plain form.</p>
+  </section>
+</div>
+{% endblock %}

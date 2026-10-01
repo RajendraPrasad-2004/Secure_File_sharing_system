@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Welcome back, {{ current_user['username'] }}</h1>
+<p class="muted">Everything you store here is encrypted at rest.</p>
+
+<section class="stats">
+  <div class="stat"><span class="num">{{ stats.total_files }}</span><span>Files you own</span></div>
+  <div class="stat"><span class="num">{{ stats.shared_with_me }}</span><span>Shared with you</span></div>
+  <div class="stat"><span class="num">{{ stats.shared_by_me }}</span><span>Files you shared</span></div>
+  <div class="stat"><span class="num">{{ stats.security_events }}</span><span>Security events</span></div>
+</section>
+
+<div class="two-col">
+  <section class="panel">
+    <div class="panel-head"><h2>Recent uploads</h2><a href="{{ url_for('upload') }}" class="btn primary small">Upload file</a></div>
+    {% if stats.recent_uploads %}
+    <table>
+      <thead><tr><th>Name</th><th>Size</th><th>Uploaded</th></tr></thead>
+      <tbody>
+      {% for f in stats.recent_uploads %}
+      <tr><td>{{ f['original_filename'] }}</td><td>{{ f['file_size']|filesize }}</td><td>{{ f['created_at'] }} UTC</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="empty">No files yet. Upload your first file to see it encrypted.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Security activity</h2><a href="{{ url_for('logs') }}" class="btn ghost small">View all</a></div>
+    {% if stats.recent_events %}
+    <ul class="events">
+      {% for e in stats.recent_events %}
+      <li><span class="badge {{ e['status']|lower }}">{{ e['status'] }}</span> {{ e['action'] }}<br><small class="muted">{{ e['timestamp'] }} UTC</small></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">No activity recorded yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
